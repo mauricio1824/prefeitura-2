@@ -68,7 +68,30 @@ public class DaoPrefeitura {
             return false;
         }
     }
-     public static Prefeitura consultar(int primaryKey) {
+     public static List<Prefeitura> consultar() {
+        List<Prefeitura> resultados = new ArrayList<>();
+        //editar o SQL conforme a entidade
+        String sql = "SELECT codigo, nome, endereco, n_funcionario FROM prefeitura";
+        PreparedStatement ps;
+        try {
+            ps = conexao.Conexao.getConexao().prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Prefeitura objeto = new Prefeitura();
+                //definir um set para cada atributo da entidade, cuidado com o tipo
+                objeto.setCodigo(rs.getInt("codigo"));
+                objeto.setNome(rs.getString("nome"));
+                objeto.setEndereco(rs.getString("endereco"));
+                objeto.setN_funcionario(rs.getInt("n_funcionario"));
+                resultados.add(objeto);//não mexa nesse, ele adiciona o objeto na lista
+            }
+            return resultados;
+        } catch (SQLException | ClassNotFoundException ex) {
+            System.out.println(ex.getMessage());
+            return null;
+        }
+}
+      public static Prefeitura consultar(int primaryKey) {
         //editar o SQL conforme a entidade
         String sql = "SELECT codigo, nome, endereco, n_funcionario FROM prefeitura WHERE codigo=?";
         PreparedStatement ps;
